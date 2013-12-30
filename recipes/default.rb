@@ -117,8 +117,8 @@ case node["platform"]
 when "centos","redhat","fedora","amazon"
   template "/etc/sysconfig/tomcat#{node["tomcat"]["base_version"]}" do
     source "sysconfig_tomcat6.erb"
-    owner "root"
-    group "root"
+    owner "#{node["tomcat"]["user"]}"
+    group "#{node["tomcat"]["group"]}"
     mode "0644"
     notifies :restart, "service[tomcat]"
   end
@@ -126,8 +126,8 @@ when "smartos"
 else
   template "/etc/default/tomcat#{node["tomcat"]["base_version"]}" do
     source "default_tomcat6.erb"
-    owner "root"
-    group "root"
+    owner "#{node["tomcat"]["user"]}"
+    group "#{node["tomcat"]["group"]}"
     mode "0644"
     notifies :restart, "service[tomcat]"
   end
