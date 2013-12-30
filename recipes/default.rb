@@ -91,6 +91,9 @@ service "tomcat" do
   when "smartos"
     service_name "tomcat"
     supports :restart => true, :reload => false, :status => true
+  when "mac_os_x"
+    service_name "tomcat"
+    supports :restart => false, :reload => false, :status => false
   else
     service_name "tomcat#{node["tomcat"]["base_version"]}"
   end
