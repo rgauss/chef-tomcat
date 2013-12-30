@@ -94,9 +94,12 @@ service "tomcat" do
   else
     service_name "tomcat#{node["tomcat"]["base_version"]}"
   end
-  action [:enable, :start]
-  retries 4
-  retry_delay 30
+  case node["platform"]
+  when "centos","redhat","fedora","amazon","debian","ubuntu","smartos"
+    action [:enable, :start]
+    retries 4
+    retry_delay 30
+  end
 end
 
 node.set_unless['tomcat']['keystore_password'] = secure_password
@@ -132,16 +135,16 @@ end
 
 template "#{node["tomcat"]["config_dir"]}/server.xml" do
   source "server.xml.erb"
-  owner "root"
-  group "root"
+  owner "#{node["tomcat"]["user"]}"
+  group "#{node["tomcat"]["group"]}"
   mode "0644"
   notifies :restart, "service[tomcat]"
 end
 
 template "#{node["tomcat"]["config_dir"]}/logging.properties" do
   source "logging.properties.erb"
-  owner "root"
-  group "root"
+  owner "#{node["tomcat"]["user"]}"
+  group "#{node["tomcat"]["group"]}"
   mode "0644"
   notifies :restart, "service[tomcat]"
 end
